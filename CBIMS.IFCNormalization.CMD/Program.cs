@@ -35,7 +35,7 @@ namespace CBIMS.IFCNormalization.CMD
             "\t<default inputPath/inputFileName.norm.ifc> The output IFC path." +
             "\r\n" +
             "--level:\r\n" +
-            "\t<default 5> The level of chunk size." +
+            "\t<default 5> The level of chunk size.\r\n" +
             "\t\tLevel\tChunk size\tMax chunk numbers\r\n" +
             "\t\t3\t10000000\t214\r\n" +
             "\t\t4\t1000000\t\t2147\r\n" +
@@ -52,7 +52,7 @@ namespace CBIMS.IFCNormalization.CMD
             "\t<default true> Use multi-core CPU to speed up calculation." +
             "\r\n" +
             "--exp_chunk_num:\r\n" +
-            "\t<default true> Using exponential function for number of chunks of each type." +
+            "\t<default true> Using the exponential function for increasing the number of chunks of each type." +
             "\r\n" +
             "--rm_ownerhistory:\r\n" +
             "\t<default true> Removing IfcOwnerHistory references for all IfcRoot nodes on output." +
