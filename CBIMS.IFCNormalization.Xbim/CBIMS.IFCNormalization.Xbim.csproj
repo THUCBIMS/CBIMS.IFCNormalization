@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<Version>0.1.2</Version>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Xbim.IO.MemoryModel" Version="5.1.341" />
+	</ItemGroup>
+
+	<ItemGroup Condition="$(UseProjectReference)">
+		<ProjectReference Include="..\CBIMS.IFCNormalization.Interface\CBIMS.IFCNormalization.Interface.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition="!$(UseProjectReference)">
+		<PackageReference Include="CBIMS.IFCNormalization.Interface" Version="0.1.0" />
+	</ItemGroup>
+	
+</Project>

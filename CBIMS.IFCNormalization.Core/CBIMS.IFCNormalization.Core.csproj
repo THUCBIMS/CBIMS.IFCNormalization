@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>enable</Nullable>
+		<Version>0.1.2</Version>
+	</PropertyGroup>
+
+	<ItemGroup Condition="$(UseProjectReference)">
+		<ProjectReference Include="..\CBIMS.IFCNormalization.Interface\CBIMS.IFCNormalization.Interface.csproj" />
+	</ItemGroup>
+
+	<ItemGroup Condition="!$(UseProjectReference)">
+		<PackageReference Include="CBIMS.IFCNormalization.Interface" Version="0.1.0" />
+	</ItemGroup>
+
+</Project>
