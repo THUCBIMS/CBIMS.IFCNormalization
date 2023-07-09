@@ -15,7 +15,7 @@ Please refer to:
 
 *Liu H, Gao G, Gu M.* 
 **A Parallel IFC Normalization Algorithm for Incremental Storage and Version Control.**
-International Workshop on Intelligent Computing in Engineering (EG-ICE), 2023. 
+International Workshop on Intelligent Computing in Engineering (EG-ICE), 2023: 511-520. 
 
 
 ## Dependencies and resources
