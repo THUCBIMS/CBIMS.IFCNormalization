@@ -17,6 +17,12 @@ Please refer to:
 **A Parallel IFC Normalization Algorithm for Incremental Storage and Version Control.**
 International Workshop on Intelligent Computing in Engineering (EG-ICE), 2023: 511-520. 
 
+Patent (China):
+
+*刘寒, 高歌, 顾明.*
+**一种图数据处理与增量存储方法、装置及计算机设备.**
+中国专利: ZL 202211625638.5 . 2022.12.16.
+
 
 ## Dependencies and resources
 
