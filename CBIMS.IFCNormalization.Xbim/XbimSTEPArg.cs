@@ -68,12 +68,11 @@ namespace CBIMS.IFCNormalization.Xbim
             }
             else if (Type == STEPType.INT)
             {
-
                 return $"{Value}";
             }
             else if (Type == STEPType.FLOAT)
             {
-                return $"{_format((double)Value)}";
+                return $"{_formatDouble((double)Value)}";
             }
             else if(Type == STEPType.STRING)
             {
@@ -85,7 +84,7 @@ namespace CBIMS.IFCNormalization.Xbim
             }
             else if (Type == STEPType.BINARY)
             {
-                throw new NotImplementedException();
+                return _formatBinary(Value as byte[]);
             }
             else 
             {
@@ -94,7 +93,7 @@ namespace CBIMS.IFCNormalization.Xbim
             
         }
 
-        private object _format(double value)
+        private static string _formatDouble(double value)
         {
             var str = value.ToString();
 
@@ -114,6 +113,33 @@ namespace CBIMS.IFCNormalization.Xbim
                 return str.Replace("E", ".0E");
             }
             return str;
+        }
+
+        private static string _formatBinary(byte[] data)
+        {
+            int Supplement = 0; // ignore Supplement
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append("\"");
+            sb.Append(Supplement % 4);
+
+            int i = 0;
+            if (Supplement >= 4)
+            {
+                //only low half
+                var x = Convert.ToString(data[i] % 16, 16);
+                sb.Append(x);
+                i++;
+            }
+
+            while (i < data.Length)
+            {
+                var x = data[i].ToString("X2");
+                sb.Append(x);
+                i++;
+            }
+            sb.Append("\"");
+            return sb.ToString();
         }
 
     }
