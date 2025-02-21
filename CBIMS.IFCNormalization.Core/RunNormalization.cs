@@ -68,5 +68,58 @@ namespace CBIMS.IFCNormalization
             Console.WriteLine("Time Write: " + (end_write - end_assemble).TotalSeconds);
 
         }
+
+        public static void JustCompress(ISTEPDoc model, string outPath, 
+            bool doPara, bool removeOwnerHistory)
+        {
+            int chunkLevel = 5;
+            double chunkSpareRate = 2.0;
+            bool doSegment = false;
+
+            DateTime start = DateTime.Now;
+
+            ChunkDispatch cp = new ChunkDispatch(model, chunkLevel, chunkSpareRate,
+                doPara, doSegment);
+            cp.RemoveOwnerHistoryOnOutput = removeOwnerHistory;
+
+            cp.JustCompress = true;
+
+            cp.Init();
+
+            DateTime end_init = DateTime.Now;
+            Console.WriteLine("\tTime Init: " + (end_init - start).TotalSeconds);
+
+            cp.HashCal();
+
+            DateTime end_hash = DateTime.Now;
+            Console.WriteLine("\tTime Hash: " + (end_hash - end_init).TotalSeconds);
+            //Console.WriteLine("Count Hash: " + cp.Count_Hash);
+
+            cp.Dispatch_JustCompress();
+
+            DateTime end_dispatch = DateTime.Now;
+            Console.WriteLine("\tTime Dispatch: " + (end_dispatch - end_hash).TotalSeconds);
+
+            string output = cp.AssembleResult_JustCompress();
+            DateTime end_assemble = DateTime.Now;
+            Console.WriteLine("\tTime AssembleResult: " + (end_assemble - end_dispatch).TotalSeconds);
+
+            Console.WriteLine("Time Compressing: " + (end_assemble - start).TotalSeconds);
+
+
+            if (outPath != null)
+            {
+                Console.WriteLine("Write To: " + outPath);
+                using (StreamWriter writer = new StreamWriter(outPath))
+                {
+                    writer.Write(output);
+                }
+
+            }
+
+            DateTime end_write = DateTime.Now;
+            Console.WriteLine("Time Write: " + (end_write - end_assemble).TotalSeconds);
+
+        }
     }
 }

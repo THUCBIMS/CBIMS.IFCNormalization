@@ -26,13 +26,14 @@ namespace CBIMS.IFCNormalization.CMD
             "\t[--parallel <true|false>] \r\n" +
             "\t[--exp_chunk_num <true|false>]\r\n" +
             "\t[--rm_ownerhistory <true|false>]\r\n" +
-            "\t[--do_segment <true|false>]\r\n" +
+            "\t[--do_segment <false|true>]\r\n" +
+            "\t[--just_compress <false|true>]\r\n" +
             "\r\n" +
             "-i:\r\n" +
             "\tAn input IFC path." +
             "\r\n" +
             "-o:\r\n" +
-            "\t<default inputPath/inputFileName.norm.ifc> The output IFC path." +
+            "\t<default {inputPath}/{inputFileName}.norm.ifc> The output IFC path." +
             "\r\n" +
             "--level:\r\n" +
             "\t<default 5> The level of chunk size.\r\n" +
@@ -60,6 +61,11 @@ namespace CBIMS.IFCNormalization.CMD
             "--do_segment:\r\n" +
             "\t<default false> Adding \"/*========*/\" as segmentation for each chunk." +
             "\r\n" +
+            "--just_compress:\r\n" +
+            "\t<default false> I do not want to re-organize the IDs but just want to merge the redundant nodes. " +
+            "\r\n\t\t* Ignoring most of the parameters above except '--parallel' and '--rm_ownerhistory'." +
+            "\r\n\t\t* The default output file name will be '{inputFileName}.compress.ifc'." +
+            "\r\n" +
             "";
 
         static void Main(string[] args)
@@ -84,6 +90,8 @@ namespace CBIMS.IFCNormalization.CMD
             bool useExpChunkNum = true;
             bool removeOwnerHistory = true;
             bool doSegment = false;
+
+            bool justCompress = false;
             
 
             for (int i = 0; i < args.Length; i++)
@@ -152,6 +160,13 @@ namespace CBIMS.IFCNormalization.CMD
                             doSegment = false;
                         i++;
                         break;
+                    case "--just_compress":
+                        if (val.ToLower() == "true")
+                            justCompress = true;
+                        if (val.ToLower() == "false")
+                            justCompress = false;
+                        i++;
+                        break;
                     default:
                         Console.WriteLine("ERR: UNKNOWN ARGUMENT");
                         _WriteHelp();
@@ -176,10 +191,20 @@ namespace CBIMS.IFCNormalization.CMD
 
             if (string.IsNullOrWhiteSpace(outPath))
             {
-                if (ifcPath.EndsWith(".ifc"))
-                    outPath = ifcPath.Substring(0, ifcPath.Length - 4) + ".norm.ifc";
+                if (justCompress)
+                {
+                    if (ifcPath.EndsWith(".ifc"))
+                        outPath = ifcPath.Substring(0, ifcPath.Length - 4) + ".compress.ifc";
+                    else
+                        outPath = ifcPath + ".compress.ifc";
+                }
                 else
-                    outPath = ifcPath + ".norm.ifc";
+                {
+                    if (ifcPath.EndsWith(".ifc"))
+                        outPath = ifcPath.Substring(0, ifcPath.Length - 4) + ".norm.ifc";
+                    else
+                        outPath = ifcPath + ".norm.ifc";
+                }
             }
 
             outPath = _fixPath(outPath);
@@ -193,6 +218,12 @@ namespace CBIMS.IFCNormalization.CMD
 
             Console.WriteLine("Time Load: " + (end_load - start).TotalSeconds);
 
+            if(justCompress)
+            {
+                RunNormalization.JustCompress(model, outPath, doPara, removeOwnerHistory);
+                Console.WriteLine("END");
+                return;
+            }
 
             RunNormalization.Do(model, outPath, chunkLevel, chunkSpareRate, 
                 doPara, useExpChunkNum, removeOwnerHistory, doSegment);

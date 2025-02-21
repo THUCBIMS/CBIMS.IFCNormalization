@@ -101,6 +101,7 @@ namespace CBIMS.IFCNormalization
         //stat
 
         internal int Count_Hash { get; private set; } = 0;
+        public bool JustCompress { get; internal set; }
 
         private static ConcurrentDictionary<int, HashAlgorithm> __threadHashAlgorithms = new ConcurrentDictionary<int, HashAlgorithm>();
         //threads
@@ -333,6 +334,39 @@ namespace CBIMS.IFCNormalization
 
         }
 
+        internal void Dispatch_JustCompress()
+        {
+            if (DoPara)
+            {
+                Parallel.ForEach(typeHashToRefMap.Keys, type =>
+                {
+                    _collectOneType(type);
+                    if (typeHashToRefMap[type] != null)
+                    {
+                        foreach (var _ref in typeHashToRefMap[type].Values)
+                        {
+                            _ref.OutID = _ref.InID;
+                        }
+                    }
+                });
+            }
+            else
+            {
+                foreach (var type in typeHashToRefMap.Keys)
+                {
+                    _collectOneType(type);
+                    if (typeHashToRefMap[type] != null)
+                    {
+                        foreach (var _ref in typeHashToRefMap[type].Values)
+                        {
+                            _ref.OutID = _ref.InID;
+                        }
+                    }
+                }
+            }
+        }
+
+
         internal IEnumerable<byte[]> ExportBytes()
         {
             yield return Encoding.ASCII.GetBytes(_getHeaderBlockStr());
@@ -391,6 +425,28 @@ namespace CBIMS.IFCNormalization
 
             return sb.ToString();
 
+        }
+
+
+        internal string AssembleResult_JustCompress()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(_getHeaderBlockStr());
+
+            var all_nodes = typeHashToRefMap.Values
+                .Where(x => x != null)
+                .SelectMany(x => x.Values).ToList();
+
+            all_nodes.Sort((x, y) => x.OutID.CompareTo(y.OutID));
+            foreach (var _ref in all_nodes)
+            {
+                sb.AppendLine(_outputOneEntity(_ref));
+            }
+
+            sb.Append(_getBottomBlockStr());
+
+            return sb.ToString();
         }
 
         private string _getHeaderBlockStr()
@@ -1177,6 +1233,7 @@ namespace CBIMS.IFCNormalization
 
             return hashOverride;
         }
+
 
     }
 }
