@@ -54,13 +54,14 @@ dotnet CBIMS.IFCNormalization.CMD.dll -i <input path>
         [--parallel <true|false>]
         [--exp_chunk_num <true|false>]
         [--rm_ownerhistory <true|false>]
-        [--do_segment <true|false>]
+        [--do_segment <false|true>]
+        [--just_compress <false|true>]
 ```
 
 `-i: `
         An input IFC path.
 
-`-o: <default inputPath/inputFileName.norm.ifc> `
+`-o: <default {inputPath}/{inputFileName}.norm.ifc> `
         The output IFC path.
         	
 `--level: <default 5> `
@@ -90,6 +91,12 @@ Level   Chunk size      Max chunk numbers
 
 `--do_segment: <default false> `
         Adding `"/*========*/"` as segmentation for each chunk.
+
+
+`--just_compress: <default false>`
+        I do not want to re-organize the IDs but just want to merge the redundant nodes.  
+        * Ignoring most of the parameters above except `'--parallel'` and `'--rm_ownerhistory'`.  
+        * The default output file name will be `'{inputFileName}.compress.ifc'`.
         
 ## License
 
